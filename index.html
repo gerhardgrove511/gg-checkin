@@ -6,343 +6,253 @@
 <title>Weekly Check-In</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --turquoise: #00C9C8;
-    --pink: #FF2D78;
-    --navy: #0A0E1A;
-    --card: #111827;
-    --card2: #1a2235;
-    --white: #F0F4FF;
-    --muted: #8896b3;
-    --border: rgba(0,201,200,0.15);
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: var(--navy);
-    color: var(--white);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    padding-bottom: 60px;
-    background-image:
-      radial-gradient(ellipse 80% 40% at 50% -10%, rgba(0,201,200,0.12) 0%, transparent 70%),
-      radial-gradient(ellipse 50% 30% at 90% 80%, rgba(255,45,120,0.08) 0%, transparent 60%);
-  }
-
-  .hero { text-align: center; padding: 48px 24px 36px; }
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(0,201,200,0.1); border: 1px solid rgba(0,201,200,0.3);
-    border-radius: 100px; padding: 6px 16px; font-size: 12px;
-    color: var(--turquoise); letter-spacing: 0.1em; text-transform: uppercase;
-    font-weight: 500; margin-bottom: 20px;
-  }
-  .hero-badge span { width: 6px; height: 6px; background: var(--turquoise); border-radius: 50%; animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.3)} }
-  .hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(28px, 7vw, 42px); font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 10px; }
-  .hero h1 em { font-style: normal; background: linear-gradient(135deg, var(--turquoise), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .hero-sub { color: var(--muted); font-size: 14px; line-height: 1.6; max-width: 320px; margin: 0 auto 24px; }
-  .hero-sub strong { color: var(--white); }
-
-  .progress-wrap { max-width: 480px; margin: 0 auto 8px; padding: 0 24px; }
-  .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 8px; }
-  .progress-label span:last-child { color: var(--turquoise); font-weight: 500; }
-  .progress-bar { height: 4px; background: rgba(255,255,255,0.08); border-radius: 100px; overflow: hidden; }
-  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--turquoise), var(--pink)); border-radius: 100px; transition: width 0.6s cubic-bezier(0.4,0,0.2,1); width: 0%; }
-
-  .form-wrap { max-width: 480px; margin: 0 auto; padding: 0 16px; }
-  .section { margin-bottom: 20px; animation: fadeUp 0.5s ease both; }
-  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-
-  .section-header { display: flex; align-items: center; gap: 10px; padding: 14px 18px; background: linear-gradient(135deg, rgba(0,201,200,0.12), rgba(0,201,200,0.04)); border: 1px solid var(--border); border-radius: 16px 16px 0 0; margin-bottom: 2px; }
-  .section-icon { font-size: 20px; }
-  .section-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--turquoise); letter-spacing: 0.02em; }
-  .section-body { background: var(--card); border: 1px solid rgba(255,255,255,0.06); border-top: none; border-radius: 0 0 16px 16px; padding: 4px 0; overflow: hidden; }
-
-  .q-item { padding: 16px 18px; border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.2s; }
-  .q-item:last-child { border-bottom: none; }
-  .q-item:focus-within { background: rgba(0,201,200,0.03); }
-  .q-label { font-size: 13px; font-weight: 500; color: var(--white); margin-bottom: 10px; line-height: 1.4; }
-  .q-num { color: var(--pink); font-weight: 700; margin-right: 4px; font-size: 12px; }
-
-  .q-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px 14px; color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s, background 0.2s; resize: none; }
-  .q-input:focus { border-color: var(--turquoise); background: rgba(0,201,200,0.06); }
-  .q-input::placeholder { color: var(--muted); font-size: 13px; }
-
-  .slider-wrap { display: flex; align-items: center; gap: 12px; }
-  .slider-val { min-width: 36px; height: 36px; background: linear-gradient(135deg, var(--turquoise), #009fa0); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 16px; color: var(--navy); flex-shrink: 0; transition: background 0.3s; }
-  input[type=range] { flex: 1; -webkit-appearance: none; height: 4px; background: rgba(255,255,255,0.1); border-radius: 100px; outline: none; }
-  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, var(--turquoise), var(--pink)); cursor: pointer; box-shadow: 0 0 10px rgba(0,201,200,0.4); transition: transform 0.15s; }
-  input[type=range]::-webkit-slider-thumb:active { transform: scale(1.2); }
-  .slider-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); margin-top: 4px; padding: 0 2px; }
-
-  .q-select { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px 14px; color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s; -webkit-appearance: none; cursor: pointer; }
-  .q-select:focus { border-color: var(--turquoise); }
-  .q-select option { background: #1a2235; }
-
-  .photo-upload { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .photo-slot { aspect-ratio: 1; background: rgba(255,255,255,0.04); border: 1.5px dashed rgba(0,201,200,0.3); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
-  .photo-slot:hover { border-color: var(--turquoise); background: rgba(0,201,200,0.06); }
-  .photo-icon { font-size: 22px; }
-  .photo-label { font-size: 10px; color: var(--muted); text-align: center; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; }
-  .photo-slot.filled { border-style: solid; border-color: var(--turquoise); }
-  .photo-slot.filled .photo-check { display: flex; }
-  .photo-check { display: none; position: absolute; top: 6px; right: 6px; width: 18px; height: 18px; background: var(--turquoise); border-radius: 50%; align-items: center; justify-content: center; font-size: 10px; color: var(--navy); }
-
-  .toggle-group { display: flex; gap: 8px; }
-  .toggle-btn { flex: 1; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-align: center; }
-  .toggle-btn.active-yes { background: rgba(0,201,200,0.15); border-color: var(--turquoise); color: var(--turquoise); }
-  .toggle-btn.active-no { background: rgba(255,45,120,0.1); border-color: var(--pink); color: var(--pink); }
-
-  .reveal-field { margin-top: 10px; overflow: hidden; max-height: 0; transition: max-height 0.4s ease, opacity 0.3s ease; opacity: 0; }
-  .reveal-field.open { max-height: 300px; opacity: 1; }
-
-  .cardio-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-
-  .period-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-  .period-btn { padding: 10px 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-align: center; }
-  .period-btn.active { background: rgba(255,45,120,0.12); border-color: var(--pink); color: var(--pink); }
-
-  .submit-wrap { padding: 24px 16px 0; max-width: 480px; margin: 0 auto; }
-  .submit-note { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
-  .submit-btn { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--turquoise) 0%, #009fa0 40%, var(--pink) 100%); border: none; border-radius: 16px; color: white; font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 800; letter-spacing: 0.02em; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; box-shadow: 0 8px 32px rgba(0,201,200,0.25); }
-  .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,201,200,0.35); }
-  .submit-btn:active { transform: translateY(0); }
-
-  /* SUCCESS */
-  .success-screen { display: none; padding: 40px 16px 80px; max-width: 480px; margin: 0 auto; animation: fadeUp 0.6s ease both; }
-  .success-screen.show { display: block; }
-  .success-hero { text-align: center; margin-bottom: 32px; }
-  .success-icon { font-size: 64px; margin-bottom: 20px; display: block; }
-  .success-hero h2 { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; margin-bottom: 10px; background: linear-gradient(135deg, var(--turquoise), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .success-hero p { color: var(--muted); font-size: 14px; line-height: 1.6; }
-
-  .summary-card { background: var(--card); border: 1px solid rgba(0,201,200,0.15); border-radius: 20px; overflow: hidden; margin-bottom: 24px; }
-  .summary-header { padding: 16px 20px; background: linear-gradient(135deg, rgba(0,201,200,0.12), rgba(0,201,200,0.04)); border-bottom: 1px solid rgba(0,201,200,0.1); font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--turquoise); letter-spacing: 0.05em; }
-  .summary-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 11px 20px; border-bottom: 1px solid rgba(255,255,255,0.04); gap: 12px; }
-  .summary-row:last-child { border-bottom: none; }
-  .summary-label { font-size: 12px; color: var(--muted); font-weight: 500; flex-shrink: 0; max-width: 45%; }
-  .summary-value { font-size: 13px; color: var(--white); font-weight: 500; text-align: right; word-break: break-word; }
-
-  .book-btn { display: block; width: 100%; padding: 18px; background: linear-gradient(135deg, var(--turquoise) 0%, #009fa0 40%, var(--pink) 100%); color: white; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 17px; border-radius: 16px; text-decoration: none; text-align: center; box-shadow: 0 8px 32px rgba(0,201,200,0.3); transition: transform 0.15s; }
-  .book-btn:hover { transform: translateY(-2px); }
-
-  .form-content { transition: opacity 0.3s; }
-  .form-content.hidden { opacity: 0; pointer-events: none; }
+:root{--t:#00C9C8;--p:#FF2D78;--navy:#0A0E1A;--card:#111827;--white:#F0F4FF;--muted:#8896b3;--border:rgba(0,201,200,0.15);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--navy);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100vh;padding-bottom:60px;background-image:radial-gradient(ellipse 80% 40% at 50% -10%,rgba(0,201,200,0.12) 0%,transparent 70%),radial-gradient(ellipse 50% 30% at 90% 80%,rgba(255,45,120,0.08) 0%,transparent 60%);}
+.hero{text-align:center;padding:48px 24px 36px;}
+.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,201,200,0.1);border:1px solid rgba(0,201,200,0.3);border-radius:100px;padding:6px 16px;font-size:12px;color:var(--t);letter-spacing:.1em;text-transform:uppercase;font-weight:500;margin-bottom:20px;}
+.dot{width:6px;height:6px;background:var(--t);border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.3)}}
+h1{font-family:'Syne',sans-serif;font-size:clamp(28px,7vw,42px);font-weight:800;line-height:1.1;letter-spacing:-.02em;margin-bottom:10px;}
+h1 em{font-style:normal;background:linear-gradient(135deg,var(--t),var(--p));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.sub{color:var(--muted);font-size:14px;line-height:1.6;max-width:320px;margin:0 auto 24px;}
+.sub strong{color:var(--white);}
+.prog-wrap{max-width:480px;margin:0 auto 8px;padding:0 24px;}
+.prog-label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:8px;}
+.prog-label span:last-child{color:var(--t);font-weight:500;}
+.prog-bar{height:4px;background:rgba(255,255,255,.08);border-radius:100px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--t),var(--p));border-radius:100px;transition:width .4s;width:0%;}
+.form-wrap{max-width:480px;margin:0 auto;padding:0 16px;}
+.sec{margin-bottom:20px;animation:up .5s ease both;}
+@keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.sec-head{display:flex;align-items:center;gap:10px;padding:14px 18px;background:linear-gradient(135deg,rgba(0,201,200,.12),rgba(0,201,200,.04));border:1px solid var(--border);border-radius:16px 16px 0 0;margin-bottom:2px;}
+.sec-icon{font-size:20px;}
+.sec-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--t);letter-spacing:.02em;}
+.sec-body{background:var(--card);border:1px solid rgba(255,255,255,.06);border-top:none;border-radius:0 0 16px 16px;padding:4px 0;overflow:hidden;}
+.qi{padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.04);}
+.qi:last-child{border-bottom:none;}
+.ql{font-size:13px;font-weight:500;color:var(--white);margin-bottom:10px;line-height:1.4;}
+.qn{color:var(--p);font-weight:700;margin-right:4px;font-size:12px;}
+.inp{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 14px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s;resize:none;}
+.inp:focus{border-color:var(--t);background:rgba(0,201,200,.06);}
+.inp::placeholder{color:var(--muted);font-size:13px;}
+.inp.err{border-color:var(--p)!important;}
+.sel{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 14px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;-webkit-appearance:none;cursor:pointer;}
+.sel:focus{border-color:var(--t);}
+.sel option{background:#1a2235;}
+.sel.err{border-color:var(--p)!important;}
+.emsg{font-size:11px;color:var(--p);margin-top:5px;display:none;}
+.emsg.show{display:block;}
+.slider-wrap{display:flex;align-items:center;gap:12px;}
+.sval{min-width:36px;height:36px;background:linear-gradient(135deg,var(--t),#009fa0);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:var(--navy);flex-shrink:0;}
+input[type=range]{flex:1;-webkit-appearance:none;height:4px;background:rgba(255,255,255,.1);border-radius:100px;outline:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,var(--t),var(--p));cursor:pointer;box-shadow:0 0 10px rgba(0,201,200,.4);}
+.slabs{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:4px;}
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.photo-slot{aspect-ratio:1;background:rgba(255,255,255,.04);border:1.5px dashed rgba(0,201,200,.3);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.photo-slot:hover{border-color:var(--t);}
+.photo-slot.filled{border-style:solid;border-color:var(--t);}
+.photo-slot.filled .pcheck{display:flex;}
+.pcheck{display:none;position:absolute;top:6px;right:6px;width:18px;height:18px;background:var(--t);border-radius:50%;align-items:center;justify-content:center;font-size:10px;color:var(--navy);}
+.picon{font-size:22px;}
+.plabel{font-size:10px;color:var(--muted);text-align:center;font-weight:500;letter-spacing:.05em;text-transform:uppercase;}
+.tg{display:flex;gap:8px;}
+.tbtn{flex:1;padding:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;text-align:center;}
+.tbtn.ay{background:rgba(0,201,200,.15);border-color:var(--t);color:var(--t);}
+.tbtn.an{background:rgba(255,45,120,.1);border-color:var(--p);color:var(--p);}
+.reveal{margin-top:10px;overflow:hidden;max-height:0;transition:max-height .4s ease,opacity .3s ease;opacity:0;}
+.reveal.open{max-height:300px;opacity:1;}
+.cardio-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.period-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.pbtn{padding:10px 8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;text-align:center;}
+.pbtn.active{background:rgba(255,45,120,.12);border-color:var(--p);color:var(--p);}
+.submit-wrap{padding:24px 16px 0;max-width:480px;margin:0 auto;}
+.vbanner{display:none;background:rgba(255,45,120,.12);border:1px solid var(--p);border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:var(--p);text-align:center;}
+.vbanner.show{display:block;}
+.snote{text-align:center;font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.5;}
+.sbtn{width:100%;padding:18px;background:linear-gradient(135deg,var(--t) 0%,#009fa0 40%,var(--p) 100%);border:none;border-radius:16px;color:white;font-family:'Syne',sans-serif;font-size:17px;font-weight:800;cursor:pointer;box-shadow:0 8px 32px rgba(0,201,200,.25);transition:transform .15s;}
+.sbtn:hover{transform:translateY(-2px);}
+.success{display:none;padding:40px 16px 80px;max-width:480px;margin:0 auto;animation:up .6s ease both;}
+.success.show{display:block;}
+.s-hero{text-align:center;margin-bottom:32px;}
+.s-icon{font-size:64px;margin-bottom:20px;display:block;}
+.s-hero h2{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;margin-bottom:10px;background:linear-gradient(135deg,var(--t),var(--p));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.s-hero p{color:var(--muted);font-size:14px;line-height:1.6;}
+.sum-card{background:var(--card);border:1px solid rgba(0,201,200,.15);border-radius:20px;overflow:hidden;margin-bottom:20px;}
+.sum-head{padding:16px 20px;background:linear-gradient(135deg,rgba(0,201,200,.12),rgba(0,201,200,.04));border-bottom:1px solid rgba(0,201,200,.1);font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--t);letter-spacing:.05em;}
+.sum-row{display:flex;justify-content:space-between;align-items:flex-start;padding:11px 20px;border-bottom:1px solid rgba(255,255,255,.04);gap:12px;}
+.sum-row:last-child{border-bottom:none;}
+.sum-label{font-size:12px;color:var(--muted);font-weight:500;flex-shrink:0;max-width:45%;}
+.sum-val{font-size:13px;color:var(--white);font-weight:500;text-align:right;word-break:break-word;}
+.wa-btn{display:block;width:100%;padding:18px;background:#25D366;border:none;border-radius:16px;color:white;font-family:'Syne',sans-serif;font-weight:800;font-size:17px;text-align:center;text-decoration:none;box-shadow:0 8px 32px rgba(37,211,102,.3);transition:transform .15s;margin-bottom:12px;}
+.wa-btn:hover{transform:translateY(-2px);}
+.book-btn{display:block;width:100%;padding:16px;background:linear-gradient(135deg,var(--t) 0%,#009fa0 40%,var(--p) 100%);color:white;font-family:'Syne',sans-serif;font-weight:800;font-size:15px;border-radius:16px;text-decoration:none;text-align:center;transition:transform .15s;}
+.book-btn:hover{transform:translateY(-2px);}
+.fc{transition:opacity .3s;}
+.fc.hidden{opacity:0;pointer-events:none;}
 </style>
 </head>
 <body>
 
-<div class="form-content" id="formContent">
-
+<div class="fc" id="fc">
   <div class="hero">
-    <div class="hero-badge"><span></span> Weekly Check-In</div>
+    <div class="badge"><span class="dot"></span> Weekly Check-In</div>
     <h1>Let's crush<br><em>this week 🔥</em></h1>
-    <p class="hero-sub">Weigh + measure on an <strong>empty stomach</strong> and have your progress photos ready before you start.</p>
+    <p class="sub">Weigh + measure on an <strong>empty stomach</strong> and have your progress photos ready before you start.</p>
   </div>
 
-  <div class="progress-wrap">
-    <div class="progress-label"><span>Your progress</span><span id="progressText">0% complete</span></div>
-    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="prog-wrap">
+    <div class="prog-label"><span>Your progress</span><span id="progText">0% complete</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
   </div>
 
-  <div class="form-wrap" id="mainForm">
+  <div class="form-wrap">
 
-    <!-- CLIENT DETAILS -->
-    <div class="section" style="animation-delay:0.05s">
-      <div class="section-header"><span class="section-icon">👤</span><span class="section-title">Your Details</span></div>
-      <div class="section-body">
-        <div class="q-item">
-          <div class="q-label">Full Name</div>
-          <input class="q-input trackable" type="text" id="clientName" placeholder="e.g. Susan van der Merwe">
-        </div>
-        <div class="q-item">
-          <div class="q-label">Email Address</div>
-          <input class="q-input trackable" type="email" id="clientEmail" placeholder="e.g. susan@email.com">
-        </div>
+    <div class="sec" style="animation-delay:.05s">
+      <div class="sec-head"><span class="sec-icon">👤</span><span class="sec-title">Your Details</span></div>
+      <div class="sec-body">
+        <div class="qi"><div class="ql">Full Name</div><input class="inp" type="text" id="clientName" placeholder="e.g. Susan van der Merwe" oninput="bar()"><div class="emsg" id="e-name">Please enter your name</div></div>
+        <div class="qi"><div class="ql">Email Address</div><input class="inp" type="email" id="clientEmail" placeholder="e.g. susan@email.com" oninput="bar()"><div class="emsg" id="e-email">Please enter your email</div></div>
       </div>
     </div>
 
-    <!-- PROGRESS & STATS -->
-    <div class="section" style="animation-delay:0.1s">
-      <div class="section-header"><span class="section-icon">📊</span><span class="section-title">Progress & Stats</span></div>
-      <div class="section-body">
+    <div class="sec" style="animation-delay:.1s">
+      <div class="sec-head"><span class="sec-icon">📊</span><span class="sec-title">Progress & Stats</span></div>
+      <div class="sec-body">
 
-        <div class="q-item">
-          <div class="q-label"><span class="q-num">1.</span> Weight — last week vs this week (kg)</div>
+        <div class="qi">
+          <div class="ql"><span class="qn">1.</span> Weight (kg) — last week & this week</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <input class="q-input trackable" type="number" id="weightLast" placeholder="Last week" step="0.1">
-            <input class="q-input trackable" type="number" id="weightThis" placeholder="This week" step="0.1">
+            <input class="inp" type="number" id="wLast" placeholder="Last week" step="0.1" oninput="bar()">
+            <input class="inp" type="number" id="wThis" placeholder="This week" step="0.1" oninput="bar()">
           </div>
+          <div class="emsg" id="e-weight">Please enter both weight values</div>
         </div>
 
-        <div class="q-item">
-          <div class="q-label"><span class="q-num">2.</span> Waist & hip measurements (cm)</div>
+        <div class="qi">
+          <div class="ql"><span class="qn">2.</span> Waist (cm) — last week & this week</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <input class="q-input trackable" type="number" id="waist" placeholder="Waist" step="0.5">
-            <input class="q-input trackable" type="number" id="hips" placeholder="Hips" step="0.5">
+            <input class="inp" type="number" id="waistLast" placeholder="Last week" step="0.5" oninput="bar()">
+            <input class="inp" type="number" id="waistThis" placeholder="This week" step="0.5" oninput="bar()">
           </div>
+          <div class="emsg" id="e-waist">Please enter both waist values</div>
         </div>
 
-        <div class="q-item">
-          <div class="q-label"><span class="q-num">3.</span> Progress photos — front, side & back</div>
-          <div class="photo-upload">
-            <div class="photo-slot trackable" onclick="markPhoto(this)"><span class="photo-check">✓</span><span class="photo-icon">📸</span><span class="photo-label">Front</span></div>
-            <div class="photo-slot trackable" onclick="markPhoto(this)"><span class="photo-check">✓</span><span class="photo-icon">📸</span><span class="photo-label">Side</span></div>
-            <div class="photo-slot trackable" onclick="markPhoto(this)"><span class="photo-check">✓</span><span class="photo-icon">📸</span><span class="photo-label">Back</span></div>
+        <div class="qi">
+          <div class="ql"><span class="qn">3.</span> Hips (cm) — last week & this week</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <input class="inp" type="number" id="hipsLast" placeholder="Last week" step="0.5" oninput="bar()">
+            <input class="inp" type="number" id="hipsThis" placeholder="This week" step="0.5" oninput="bar()">
           </div>
+          <div class="emsg" id="e-hips">Please enter both hip values</div>
         </div>
 
-        <div class="q-item">
-          <div class="q-label"><span class="q-num">4.</span> Average daily steps</div>
-          <input class="q-input trackable" type="number" id="steps" placeholder="e.g. 8500">
+        <div class="qi">
+          <div class="ql"><span class="qn">4.</span> Progress photos — front, side & back</div>
+          <div class="photo-grid">
+            <div class="photo-slot" onclick="photo(this,'front')"><span class="pcheck">✓</span><span class="picon">📸</span><span class="plabel">Front</span></div>
+            <div class="photo-slot" onclick="photo(this,'side')"><span class="pcheck">✓</span><span class="picon">📸</span><span class="plabel">Side</span></div>
+            <div class="photo-slot" onclick="photo(this,'back')"><span class="pcheck">✓</span><span class="picon">📸</span><span class="plabel">Back</span></div>
+          </div>
+          <div class="emsg" id="e-photos">Please confirm all 3 photos</div>
         </div>
 
-        <div class="q-item">
-          <div class="q-label"><span class="q-num">5.</span> Workouts completed this week</div>
-          <select class="q-select trackable" id="workouts">
+        <div class="qi"><div class="ql"><span class="qn">5.</span> Average daily steps</div><input class="inp" type="number" id="steps" placeholder="e.g. 8500" oninput="bar()"><div class="emsg" id="e-steps">Please enter your daily steps</div></div>
+
+        <div class="qi">
+          <div class="ql"><span class="qn">6.</span> Workouts completed this week</div>
+          <select class="sel" id="workouts" onchange="bar()">
             <option value="" disabled selected>Select...</option>
-            <option>0 — missed the week</option>
-            <option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option>
+            <option>0 — missed the week</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option>
           </select>
+          <div class="emsg" id="e-workouts">Please select workouts completed</div>
         </div>
 
-        <!-- CARDIO - NEW -->
-        <div class="q-item">
-          <div class="q-label"><span class="q-num">6.</span> Do you have cardio in your plan?</div>
-          <div class="toggle-group">
-            <button class="toggle-btn trackable" onclick="toggleCardio(this,'yes')">✅ Yes</button>
-            <button class="toggle-btn trackable" onclick="toggleCardio(this,'no')">❌ No</button>
+        <div class="qi">
+          <div class="ql"><span class="qn">7.</span> Do you have cardio in your plan? 🏃</div>
+          <div class="tg" id="tg-cardio">
+            <button class="tbtn" onclick="cardio(this,'yes')">✅ Yes</button>
+            <button class="tbtn" onclick="cardio(this,'no')">❌ No</button>
           </div>
-          <div class="reveal-field" id="cardioReveal">
-            <div class="cardio-fields" style="margin-top:10px">
-              <input class="q-input" type="number" id="cardioDuration" placeholder="Duration (mins)">
-              <select class="q-select" id="cardioType">
+          <div class="reveal" id="cardioReveal">
+            <div class="cardio-grid">
+              <input class="inp" type="number" id="cardioDur" placeholder="Duration (mins)" oninput="bar()">
+              <select class="sel" id="cardioType" onchange="bar()">
                 <option value="" disabled selected>Type...</option>
-                <option>Walking</option><option>Running</option><option>Cycling</option>
-                <option>HIIT</option><option>Swimming</option><option>Rowing</option>
-                <option>Elliptical</option><option>Other</option>
+                <option>Walking</option><option>Running</option><option>Cycling</option><option>HIIT</option><option>Swimming</option><option>Rowing</option><option>Elliptical</option><option>Other</option>
               </select>
             </div>
           </div>
+          <div class="emsg" id="e-cardio">Please answer the cardio question</div>
         </div>
 
-        <div class="q-item">
-          <div class="q-label"><span class="q-num">7.</span> Average sleep per night (hours)</div>
-          <input class="q-input trackable" type="number" id="sleep" placeholder="e.g. 7.5" step="0.5">
+        <div class="qi"><div class="ql"><span class="qn">8.</span> Average sleep per night (hours) 😴</div><input class="inp" type="number" id="sleep" placeholder="e.g. 7.5" step="0.5" oninput="bar()"><div class="emsg" id="e-sleep">Please enter your sleep hours</div></div>
+        <div class="qi"><div class="ql"><span class="qn">9.</span> Water intake per day (litres) 💧</div><input class="inp" type="number" id="water" placeholder="e.g. 2.5" step="0.5" oninput="bar()"><div class="emsg" id="e-water">Please enter your water intake</div></div>
+
+      </div>
+    </div>
+
+    <div class="sec" style="animation-delay:.2s">
+      <div class="sec-head"><span class="sec-icon">🍽️</span><span class="sec-title">Nutrition & Digestion</span></div>
+      <div class="sec-body">
+
+        <div class="qi">
+          <div class="ql"><span class="qn">10.</span> How was your food intake this week?</div>
+          <div class="slider-wrap"><div class="sval" id="v10">5</div><div style="flex:1"><input type="range" min="1" max="10" value="5" oninput="slide(this,'v10')"><div class="slabs"><span>Poor</span><span>Average</span><span>Perfect</span></div></div></div>
         </div>
 
-        <div class="q-item">
-          <div class="q-label"><span class="q-num">8.</span> Water intake per day (litres)</div>
-          <input class="q-input trackable" type="number" id="water" placeholder="e.g. 2.5" step="0.5">
+        <div class="qi">
+          <div class="ql"><span class="qn">11.</span> Did you have your planned cheat meal? 🍔</div>
+          <div class="tg" id="tg-cheat">
+            <button class="tbtn" onclick="tog(this,'yes','cheatReveal','tg-cheat','e-cheat')">✅ Yes</button>
+            <button class="tbtn" onclick="tog(this,'no','cheatReveal','tg-cheat','e-cheat')">❌ No</button>
+          </div>
+          <div class="reveal" id="cheatReveal"><textarea class="inp" id="cheatDetail" rows="2" placeholder="What did you have?" style="margin-top:10px" oninput="bar()"></textarea></div>
+          <div class="emsg" id="e-cheat">Please answer the cheat meal question</div>
+        </div>
+
+        <div class="qi">
+          <div class="ql"><span class="qn">12.</span> Hunger levels this week</div>
+          <div class="slider-wrap"><div class="sval" id="v12">5</div><div style="flex:1"><input type="range" min="1" max="10" value="5" oninput="slide(this,'v12')"><div class="slabs"><span>Starving</span><span>Manageable</span><span>Full</span></div></div></div>
+        </div>
+
+        <div class="qi">
+          <div class="ql"><span class="qn">13.</span> Bowel movements per day 💩</div>
+          <select class="sel" id="bowel" onchange="bar()"><option value="" disabled selected>Select...</option><option>0 — constipated</option><option>1</option><option>2</option><option>3+</option></select>
+          <div class="emsg" id="e-bowel">Please select bowel movements</div>
         </div>
 
       </div>
     </div>
 
-    <!-- NUTRITION -->
-    <div class="section" style="animation-delay:0.2s">
-      <div class="section-header"><span class="section-icon">🍽️</span><span class="section-title">Nutrition & Digestion</span></div>
-      <div class="section-body">
+    <div class="sec" style="animation-delay:.3s">
+      <div class="sec-head"><span class="sec-icon">🧠</span><span class="sec-title">Mindset & Energy</span></div>
+      <div class="sec-body">
 
-        <div class="q-item">
-          <div class="q-label"><span class="q-num">9.</span> How was your food intake this week?</div>
-          <div class="slider-wrap">
-            <div class="slider-val" id="val9">5</div>
-            <div style="flex:1">
-              <input type="range" class="trackable" min="1" max="10" value="5" oninput="updateSlider(this,'val9')">
-              <div class="slider-labels"><span>Poor</span><span>Average</span><span>Perfect</span></div>
-            </div>
-          </div>
+        <div class="qi">
+          <div class="ql"><span class="qn">14.</span> Mental health this week</div>
+          <div class="slider-wrap"><div class="sval" id="v14">5</div><div style="flex:1"><input type="range" min="1" max="10" value="5" oninput="slide(this,'v14')"><div class="slabs"><span>Struggling</span><span>OK</span><span>Thriving</span></div></div></div>
         </div>
 
-        <div class="q-item">
-          <div class="q-label"><span class="q-num">10.</span> Did you have your planned cheat meal?</div>
-          <div class="toggle-group">
-            <button class="toggle-btn trackable" onclick="toggleBtn(this,'yes','cheatReveal')">✅ Yes</button>
-            <button class="toggle-btn trackable" onclick="toggleBtn(this,'no','cheatReveal')">❌ No</button>
-          </div>
-          <div class="reveal-field" id="cheatReveal">
-            <textarea class="q-input" id="cheatDetails" rows="2" placeholder="What did you have? 😋" style="margin-top:10px"></textarea>
-          </div>
+        <div class="qi">
+          <div class="ql"><span class="qn">15.</span> Energy levels this week</div>
+          <div class="slider-wrap"><div class="sval" id="v15">5</div><div style="flex:1"><input type="range" min="1" max="10" value="5" oninput="slide(this,'v15')"><div class="slabs"><span>Drained</span><span>OK</span><span>Energised</span></div></div></div>
         </div>
 
-        <div class="q-item">
-          <div class="q-label"><span class="q-num">11.</span> Hunger levels this week</div>
-          <div class="slider-wrap">
-            <div class="slider-val" id="val11">5</div>
-            <div style="flex:1">
-              <input type="range" class="trackable" min="1" max="10" value="5" oninput="updateSlider(this,'val11')">
-              <div class="slider-labels"><span>Starving</span><span>Manageable</span><span>Full</span></div>
-            </div>
+        <div class="qi"><div class="ql"><span class="qn">16.</span> Biggest win this week 🏆</div><textarea class="inp" id="bigWin" rows="2" placeholder="Don't be shy — celebrate it! 🎉" oninput="bar()"></textarea><div class="emsg" id="e-win">Please enter your biggest win</div></div>
+        <div class="qi"><div class="ql"><span class="qn">17.</span> Biggest challenge this week</div><textarea class="inp" id="bigChallenge" rows="2" placeholder="What made it tough?" oninput="bar()"></textarea><div class="emsg" id="e-challenge">Please enter your biggest challenge</div></div>
+
+        <div class="qi">
+          <div class="ql"><span class="qn">18.</span> 🗓️ When is your next menstrual cycle?</div>
+          <div class="tg" id="tg-period" style="margin-bottom:10px">
+            <button class="tbtn" onclick="periodNo(this)">❌ Not applicable</button>
+            <button class="tbtn" onclick="periodYes(this)">📅 Select date</button>
           </div>
-        </div>
-
-        <div class="q-item">
-          <div class="q-label"><span class="q-num">12.</span> Bowel movements per day 💩</div>
-          <select class="q-select trackable" id="bowel">
-            <option value="" disabled selected>Select...</option>
-            <option>0 — constipated</option><option>1</option><option>2</option><option>3+</option>
-          </select>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- MINDSET -->
-    <div class="section" style="animation-delay:0.3s">
-      <div class="section-header"><span class="section-icon">🧠</span><span class="section-title">Mindset & Energy</span></div>
-      <div class="section-body">
-
-        <div class="q-item">
-          <div class="q-label"><span class="q-num">13.</span> Mental health this week</div>
-          <div class="slider-wrap">
-            <div class="slider-val" id="val13">5</div>
-            <div style="flex:1">
-              <input type="range" class="trackable" min="1" max="10" value="5" oninput="updateSlider(this,'val13')">
-              <div class="slider-labels"><span>Struggling</span><span>OK</span><span>Thriving</span></div>
-            </div>
+          <div id="periodReveal" style="display:none;margin-top:10px;">
+            <input class="inp" type="date" id="periodDate" onchange="onPeriodDate()" style="color:var(--white);">
           </div>
-        </div>
-
-        <div class="q-item">
-          <div class="q-label"><span class="q-num">14.</span> Energy levels this week</div>
-          <div class="slider-wrap">
-            <div class="slider-val" id="val14">5</div>
-            <div style="flex:1">
-              <input type="range" class="trackable" min="1" max="10" value="5" oninput="updateSlider(this,'val14')">
-              <div class="slider-labels"><span>Drained</span><span>OK</span><span>Energised</span></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="q-item">
-          <div class="q-label"><span class="q-num">15.</span> Biggest win this week 🏆</div>
-          <textarea class="q-input trackable" id="biggestWin" rows="2" placeholder="Don't be shy — celebrate it!"></textarea>
-        </div>
-
-        <div class="q-item">
-          <div class="q-label"><span class="q-num">16.</span> Biggest challenge this week</div>
-          <textarea class="q-input trackable" id="biggestChallenge" rows="2" placeholder="What made it tough?"></textarea>
-        </div>
-
-        <!-- PERIOD - UPGRADED -->
-        <div class="q-item">
-          <div class="q-label"><span class="q-num">17.</span> Menstrual cycle <span style="color:var(--muted);font-weight:300">(females only — skip if N/A)</span></div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Which week are you in?</div>
-          <div class="period-options">
-            <button class="period-btn" onclick="selectPeriod(this,'Week 1 — Period')">🔴 Week 1 — Period</button>
-            <button class="period-btn" onclick="selectPeriod(this,'Week 2 — Follicular')">🌱 Week 2 — Follicular</button>
-            <button class="period-btn" onclick="selectPeriod(this,'Week 3 — Ovulation')">✨ Week 3 — Ovulation</button>
-            <button class="period-btn" onclick="selectPeriod(this,'Week 4 — Luteal')">🌙 Week 4 — Luteal</button>
-            <button class="period-btn" onclick="selectPeriod(this,'Expecting soon')">⏳ Expecting soon</button>
-            <button class="period-btn" onclick="selectPeriod(this,'Not applicable')">➖ Not applicable</button>
-          </div>
-          <div class="reveal-field" id="periodExpect">
-            <input class="q-input" type="date" id="periodDate" style="margin-top:10px">
-          </div>
-          <textarea class="q-input" id="periodNotes" rows="2" placeholder="Any notes or symptoms..." style="margin-top:10px"></textarea>
+          <textarea class="inp" id="periodNotes" rows="2" placeholder="Any symptoms or notes this week..." style="margin-top:10px" oninput="bar()"></textarea>
+          <div class="emsg" id="e-period">Please answer the menstrual cycle question</div>
         </div>
 
       </div>
@@ -351,219 +261,230 @@
   </div>
 
   <div class="submit-wrap">
-    <p class="submit-note">If you fail to check in, I know you cheated yourself and me this week.<br><strong style="color:var(--white)">Not negotiable. Let's go! 💪</strong></p>
-    <button class="submit-btn" onclick="submitForm()">Submit My Check-In 🚀</button>
+    <div class="vbanner" id="vbanner">Please fill in all required fields before submitting.</div>
+    <p class="snote">If you fail to check in, I know you cheated yourself and me this week.<br><strong style="color:var(--white)">Not negotiable. Let's go! 💪</strong></p>
+    <button class="sbtn" onclick="submit()">Submit My Check-In 🚀</button>
   </div>
-
 </div>
 
-<!-- SUCCESS SCREEN -->
-<div class="success-screen" id="successScreen">
-  <div class="success-hero">
-    <span class="success-icon">🔥</span>
+<div class="success" id="successScreen">
+  <div class="s-hero">
+    <span class="s-icon">🔥</span>
     <h2>Check-In Complete!</h2>
-    <p>Your coach has been notified.<br>Here's what you submitted — book your call below!</p>
+    <p>Review your summary below, then send it to your coach and book your call.</p>
   </div>
-
-  <div class="summary-card">
-    <div class="summary-header">📋 YOUR CHECK-IN SUMMARY</div>
-    <div id="summaryRows"></div>
-  </div>
-
-  <a href="https://calendly.com/ggfitnesstransformations/15min" target="_blank" class="book-btn">📅 Book My Check-In Call</a>
-  <p style="margin-top:20px;font-size:13px;color:var(--muted);text-align:center">Keep winning the week — see you on the call! 💪</p>
+  <div class="sum-card"><div class="sum-head">YOUR CHECK-IN SUMMARY</div><div id="sumRows"></div></div>
+  <a id="waLink" href="#" class="wa-btn">Send to Coach on WhatsApp</a>
+  <a href="https://calendly.com/ggfitnesstransformations/15min" target="_blank" class="book-btn">Book My Check-In Call</a>
+  <p style="margin-top:20px;font-size:13px;color:var(--muted);text-align:center">See you on the call! 💪</p>
 </div>
 
 <script>
-  const TOTAL = 17;
-  let periodSelected = '';
-  let cardioSelected = '';
+var periodSel = '';
+var cardioSel = '';
+var pics = {front:false,side:false,back:false};
 
-  function updateSlider(el, valId) {
-    document.getElementById(valId).textContent = el.value;
-    const pct = (el.value - 1) / 9;
-    const r = Math.round(0 + pct * 255);
-    const g = Math.round(201 - pct * 100);
-    document.getElementById(valId).style.background = `rgb(${r},${g},${pct > 0.6 ? 120 : 200})`;
-    updateBar();
+var REQ = [
+  function(){return !!g('clientName');},
+  function(){return !!g('clientEmail');},
+  function(){return !!g('wLast') && !!g('wThis');},
+  function(){return !!g('waistLast') && !!g('waistThis');},
+  function(){return !!g('hipsLast') && !!g('hipsThis');},
+  function(){return pics.front && pics.side && pics.back;},
+  function(){return !!g('steps');},
+  function(){return !!g('workouts');},
+  function(){return cardioSel !== '';},
+  function(){return !!g('sleep');},
+  function(){return !!g('water');},
+  function(){return !!document.querySelector('#tg-cheat .ay, #tg-cheat .an');},
+  function(){return !!g('bowel');},
+  function(){return !!g('bigWin');},
+  function(){return !!g('bigChallenge');},
+  function(){return periodSel !== '';},
+];
+
+function g(id){var el=document.getElementById(id);return el?el.value.trim():'';}
+
+function bar(){
+  var filled=0;
+  for(var i=0;i<REQ.length;i++){if(REQ[i]())filled++;}
+  var pct=Math.round((filled/REQ.length)*100);
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progText').textContent=pct+'% complete';
+}
+
+function slide(el,id){
+  document.getElementById(id).textContent=el.value;
+  bar();
+}
+
+function tog(btn,type,revealId,groupId,errId){
+  var g=document.getElementById(groupId);
+  var btns=g.querySelectorAll('.tbtn');
+  for(var i=0;i<btns.length;i++){btns[i].classList.remove('ay','an');}
+  btn.classList.add(type==='yes'?'ay':'an');
+  var r=document.getElementById(revealId);
+  if(r){r.classList.toggle('open',type==='yes');}
+  var e=document.getElementById(errId);
+  if(e){e.classList.remove('show');}
+  bar();
+}
+
+function cardio(btn,type){
+  cardioSel=type;
+  var g=document.getElementById('tg-cardio');
+  var btns=g.querySelectorAll('.tbtn');
+  for(var i=0;i<btns.length;i++){btns[i].classList.remove('ay','an');}
+  btn.classList.add(type==='yes'?'ay':'an');
+  document.getElementById('cardioReveal').classList.toggle('open',type==='yes');
+  document.getElementById('e-cardio').classList.remove('show');
+  bar();
+}
+
+function periodNo(btn){
+  periodSel='Not applicable';
+  var g=document.getElementById('tg-period');
+  g.querySelectorAll('.tbtn').forEach(function(b){b.classList.remove('ay','an');});
+  btn.classList.add('an');
+  document.getElementById('periodReveal').style.display='none';
+  document.getElementById('e-period').classList.remove('show');
+  bar();
+}
+
+function periodYes(btn){
+  periodSel='selecting';
+  var g=document.getElementById('tg-period');
+  g.querySelectorAll('.tbtn').forEach(function(b){b.classList.remove('ay','an');});
+  btn.classList.add('ay');
+  document.getElementById('periodReveal').style.display='block';
+  document.getElementById('e-period').classList.remove('show');
+  bar();
+}
+
+function onPeriodDate(){
+  var val=document.getElementById('periodDate').value;
+  if(val){periodSel=val;}
+  bar();
+}
+
+function photo(slot,key){
+  slot.classList.toggle('filled');
+  pics[key]=slot.classList.contains('filled');
+  document.getElementById('e-photos').classList.remove('show');
+  bar();
+}
+
+function diff(a,b){
+  if(!a||!b)return '';
+  var d=(parseFloat(b)-parseFloat(a)).toFixed(1);
+  return parseFloat(d)>=0?' (+'+d+')':' ('+d+')';
+}
+
+function validate(){
+  var valid=true;
+  var first=null;
+  function chk(ok,errId,ids){
+    var e=document.getElementById(errId);
+    if(e)e.classList.toggle('show',!ok);
+    if(ids){for(var i=0;i<ids.length;i++){var el=document.getElementById(ids[i]);if(el)el.classList.toggle('err',!ok);}}
+    if(!ok){valid=false;if(!first&&e)first=e;}
   }
+  chk(!!g('clientName'),'e-name',['clientName']);
+  chk(!!g('clientEmail'),'e-email',['clientEmail']);
+  chk(!!g('wLast')&&!!g('wThis'),'e-weight',['wLast','wThis']);
+  chk(!!g('waistLast')&&!!g('waistThis'),'e-waist',['waistLast','waistThis']);
+  chk(!!g('hipsLast')&&!!g('hipsThis'),'e-hips',['hipsLast','hipsThis']);
+  chk(pics.front&&pics.side&&pics.back,'e-photos',[]);
+  chk(!!g('steps'),'e-steps',['steps']);
+  chk(!!g('workouts'),'e-workouts',['workouts']);
+  chk(cardioSel!=='','e-cardio',[]);
+  chk(!!g('sleep'),'e-sleep',['sleep']);
+  chk(!!g('water'),'e-water',['water']);
+  chk(!!document.querySelector('#tg-cheat .ay,#tg-cheat .an'),'e-cheat',[]);
+  chk(!!g('bowel'),'e-bowel',['bowel']);
+  chk(!!g('bigWin'),'e-win',['bigWin']);
+  chk(!!g('bigChallenge'),'e-challenge',['bigChallenge']);
+  chk(periodSel!==''&&periodSel!=='selecting','e-period',[]);
+  if(first)first.scrollIntoView({behavior:'smooth',block:'center'});
+  return valid;
+}
 
-  function updateBar() {
-    const inputs = document.querySelectorAll('.trackable');
-    let filled = 0;
-    inputs.forEach(i => {
-      if (i.tagName === 'INPUT' && i.type === 'range') { filled++; return; }
-      if (i.tagName === 'INPUT' && i.value) filled++;
-      if (i.tagName === 'TEXTAREA' && i.value) filled++;
-      if (i.tagName === 'SELECT' && i.value) filled++;
-      if (i.classList.contains('photo-slot') && i.classList.contains('filled')) filled++;
-      if (i.classList.contains('toggle-btn') && (i.classList.contains('active-yes') || i.classList.contains('active-no'))) filled++;
-    });
-    const pct = Math.min(100, Math.round((filled / TOTAL) * 100));
-    document.getElementById('progressFill').style.width = pct + '%';
-    document.getElementById('progressText').textContent = `${pct}% complete`;
+function submit(){
+  if(!validate()){document.getElementById('vbanner').classList.add('show');return;}
+  document.getElementById('vbanner').classList.remove('show');
+
+  var cardioStr=cardioSel==='no'?'No':'Yes - '+g('cardioDur')+' mins, '+g('cardioType');
+  var periodStr=periodSel==='Not applicable'?'N/A':periodSel;
+
+  var d={
+    name:g('clientName'),email:g('clientEmail'),
+    wL:g('wLast'),wT:g('wThis'),
+    waistL:g('waistLast'),waistT:g('waistThis'),
+    hipsL:g('hipsLast'),hipsT:g('hipsThis'),
+    steps:g('steps'),workouts:g('workouts'),cardio:cardioStr,
+    sleep:g('sleep'),water:g('water'),
+    food:document.getElementById('v10').textContent,
+    hunger:document.getElementById('v12').textContent,
+    cheat:document.querySelector('#tg-cheat .ay')?'Yes':'No',
+    cheatDetail:g('cheatDetail'),bowel:g('bowel'),
+    mental:document.getElementById('v14').textContent,
+    energy:document.getElementById('v15').textContent,
+    win:g('bigWin'),challenge:g('bigChallenge'),
+    period:periodStr,periodNotes:g('periodNotes'),
+  };
+
+  var rows=[
+    ['Name',d.name],['Email',d.email],
+    ['Weight',d.wL+'kg -> '+d.wT+'kg'+diff(d.wL,d.wT)],
+    ['Waist',d.waistL+'cm -> '+d.waistT+'cm'+diff(d.waistL,d.waistT)],
+    ['Hips',d.hipsL+'cm -> '+d.hipsT+'cm'+diff(d.hipsL,d.hipsT)],
+    ['Steps',d.steps],['Workouts',d.workouts],['Cardio',d.cardio],
+    ['Sleep',d.sleep+' hrs'],['Water',d.water+' L'],
+    ['Food score',d.food+'/10'],['Hunger',d.hunger+'/10'],
+    ['Cheat meal',d.cheat+(d.cheatDetail?': '+d.cheatDetail:'')],
+    ['Bowel',d.bowel],['Mental',d.mental+'/10'],['Energy',d.energy+'/10'],
+    ['Biggest win',d.win],['Biggest challenge',d.challenge],
+    ['Next cycle',d.period],['Cycle notes',d.periodNotes||'—'],
+  ];
+
+  var html='';
+  for(var i=0;i<rows.length;i++){
+    html+='<div class="sum-row"><span class="sum-label">'+rows[i][0]+'</span><span class="sum-val">'+(rows[i][1]||'—')+'</span></div>';
   }
+  document.getElementById('sumRows').innerHTML=html;
 
-  function toggleBtn(btn, type, revealId) {
-    const group = btn.closest('.toggle-group');
-    group.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active-yes','active-no'));
-    btn.classList.add(type === 'yes' ? 'active-yes' : 'active-no');
-    const reveal = document.getElementById(revealId);
-    if (reveal) reveal.classList.toggle('open', type === 'yes');
-    updateBar();
-  }
+  var msg=[
+    'WEEKLY CHECK-IN - '+d.name,'',
+    'MEASUREMENTS',
+    'Weight: '+d.wL+'kg -> '+d.wT+'kg'+diff(d.wL,d.wT),
+    'Waist: '+d.waistL+'cm -> '+d.waistT+'cm'+diff(d.waistL,d.waistT),
+    'Hips: '+d.hipsL+'cm -> '+d.hipsT+'cm'+diff(d.hipsL,d.hipsT),'',
+    'ACTIVITY',
+    'Steps: '+d.steps,'Workouts: '+d.workouts,'Cardio: '+d.cardio,
+    'Sleep: '+d.sleep+' hrs','Water: '+d.water+' L','',
+    'NUTRITION',
+    'Food score: '+d.food+'/10','Hunger: '+d.hunger+'/10',
+    'Cheat meal: '+d.cheat+(d.cheatDetail?' - '+d.cheatDetail:''),
+    'Bowel: '+d.bowel,'',
+    'MINDSET',
+    'Mental: '+d.mental+'/10','Energy: '+d.energy+'/10',
+    'Win: '+d.win,'Challenge: '+d.challenge,'',
+    'CYCLE',
+    'Next cycle: '+d.period+(d.periodNotes?' - '+d.periodNotes:''),'',
+    'Date: '+new Date().toLocaleDateString('en-ZA'),
+  ].join('\n');
 
-  function toggleCardio(btn, type) {
-    cardioSelected = type;
-    const group = btn.closest('.toggle-group');
-    group.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active-yes','active-no'));
-    btn.classList.add(type === 'yes' ? 'active-yes' : 'active-no');
-    document.getElementById('cardioReveal').classList.toggle('open', type === 'yes');
-    updateBar();
-  }
+  document.getElementById('waLink').href='https://wa.me/27762808596?text='+encodeURIComponent(msg);
 
-  function selectPeriod(btn, value) {
-    periodSelected = value;
-    document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('periodExpect').classList.toggle('open', value === 'Expecting soon');
-    updateBar();
-  }
+  document.getElementById('fc').classList.add('hidden');
+  setTimeout(function(){
+    document.getElementById('fc').style.display='none';
+    document.getElementById('successScreen').classList.add('show');
+    window.scrollTo(0,0);
+  },300);
+}
 
-  function markPhoto(slot) {
-    slot.classList.toggle('filled');
-    updateBar();
-  }
-
-  document.querySelectorAll('.q-input, .q-select').forEach(el => {
-    el.addEventListener('input', () => updateBar());
-  });
-
-  function buildSummary(data) {
-    const rows = [
-      ['Name', data.full_name],
-      ['Email', data.email],
-      ['Weight last week', data.weight_last_week ? data.weight_last_week + ' kg' : '—'],
-      ['Weight this week', data.weight_this_week ? data.weight_this_week + ' kg' : '—'],
-      ['Change', data.weight_change],
-      ['Waist', data.waist_cm ? data.waist_cm + ' cm' : '—'],
-      ['Hips', data.hips_cm ? data.hips_cm + ' cm' : '—'],
-      ['Daily steps', data.daily_steps || '—'],
-      ['Workouts', data.workouts_completed || '—'],
-      ['Cardio', data.cardio],
-      ['Sleep', data.sleep_hours ? data.sleep_hours + ' hrs' : '—'],
-      ['Water', data.water_litres ? data.water_litres + ' L' : '—'],
-      ['Food score', data.food_intake_score + '/10'],
-      ['Cheat meal', data.cheat_meal + (data.cheat_meal_details ? ': ' + data.cheat_meal_details : '')],
-      ['Hunger', data.hunger_score + '/10'],
-      ['Bowel movements', data.bowel_movements || '—'],
-      ['Mental health', data.mental_health_score + '/10'],
-      ['Energy', data.energy_score + '/10'],
-      ['Biggest win', data.biggest_win || '—'],
-      ['Biggest challenge', data.biggest_challenge || '—'],
-      ['Cycle week', data.period_week || '—'],
-      ['Cycle notes', data.period_notes || '—'],
-    ];
-    document.getElementById('summaryRows').innerHTML = rows.map(([label, value]) => `
-      <div class="summary-row">
-        <span class="summary-label">${label}</span>
-        <span class="summary-value">${value || '—'}</span>
-      </div>
-    `).join('');
-  }
-
-  async function submitForm() {
-    const btn = document.querySelector('.submit-btn');
-    btn.textContent = 'Sending... ⏳';
-    btn.disabled = true;
-
-    const wLast = parseFloat(document.getElementById('weightLast')?.value) || 0;
-    const wThis = parseFloat(document.getElementById('weightThis')?.value) || 0;
-    const weightChange = wLast && wThis
-      ? ((wThis - wLast) >= 0 ? '+' : '') + (wThis - wLast).toFixed(1) + ' kg'
-      : '—';
-
-    const cardioStr = cardioSelected === 'no' ? 'No'
-      : cardioSelected === 'yes'
-        ? `Yes — ${document.getElementById('cardioDuration')?.value || '?'} mins, ${document.getElementById('cardioType')?.value || '?'}`
-        : 'Not answered';
-
-    const data = {
-      full_name: document.getElementById('clientName')?.value || '',
-      email: document.getElementById('clientEmail')?.value || '',
-      weight_last_week: document.getElementById('weightLast')?.value || '',
-      weight_this_week: document.getElementById('weightThis')?.value || '',
-      weight_change: weightChange,
-      waist_cm: document.getElementById('waist')?.value || '',
-      hips_cm: document.getElementById('hips')?.value || '',
-      daily_steps: document.getElementById('steps')?.value || '',
-      workouts_completed: document.getElementById('workouts')?.value || '',
-      cardio: cardioStr,
-      sleep_hours: document.getElementById('sleep')?.value || '',
-      water_litres: document.getElementById('water')?.value || '',
-      food_intake_score: document.getElementById('val9')?.textContent || '',
-      cheat_meal: document.querySelector('#mainForm .toggle-btn.active-yes') ? 'Yes' : 'No',
-      cheat_meal_details: document.getElementById('cheatDetails')?.value || '',
-      hunger_score: document.getElementById('val11')?.textContent || '',
-      bowel_movements: document.getElementById('bowel')?.value || '',
-      mental_health_score: document.getElementById('val13')?.textContent || '',
-      energy_score: document.getElementById('val14')?.textContent || '',
-      biggest_win: document.getElementById('biggestWin')?.value || '',
-      biggest_challenge: document.getElementById('biggestChallenge')?.value || '',
-      period_week: periodSelected || 'Not answered',
-      period_expected_date: document.getElementById('periodDate')?.value || '',
-      period_notes: document.getElementById('periodNotes')?.value || '',
-      submitted_at: new Date().toISOString()
-    };
-
-    // Webhook
-    try {
-      await fetch('/api/webhook', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-    } catch(e) { console.log('Webhook:', e); }
-
-    // WhatsApp via CallMeBot — replace YOUR_API_KEY after setup
-    try {
-      const msg = [
-        `🔥 NEW CHECK-IN — ${data.full_name}`,
-        `📧 ${data.email}`,
-        ``,
-        `⚖️ Weight: ${data.weight_last_week}kg → ${data.weight_this_week}kg (${data.weight_change})`,
-        `📏 Waist: ${data.waist_cm}cm | Hips: ${data.hips_cm}cm`,
-        `👟 Steps: ${data.daily_steps}`,
-        `🏋️ Workouts: ${data.workouts_completed}`,
-        `🏃 Cardio: ${data.cardio}`,
-        `😴 Sleep: ${data.sleep_hours}hrs | 💧 Water: ${data.water_litres}L`,
-        ``,
-        `🍽️ Food: ${data.food_intake_score}/10 | 😤 Hunger: ${data.hunger_score}/10`,
-        `🍔 Cheat: ${data.cheat_meal}${data.cheat_meal_details ? ' — ' + data.cheat_meal_details : ''}`,
-        `💩 Bowel: ${data.bowel_movements}`,
-        ``,
-        `🧠 Mental: ${data.mental_health_score}/10 | ⚡ Energy: ${data.energy_score}/10`,
-        `🏆 Win: ${data.biggest_win}`,
-        `😤 Challenge: ${data.biggest_challenge}`,
-        ``,
-        `🌸 Cycle: ${data.period_week}${data.period_notes ? ' — ' + data.period_notes : ''}`,
-        ``,
-        `📅 ${new Date().toLocaleString('en-ZA')}`
-      ].join('\n');
-
-      const encoded = encodeURIComponent(msg);
-      await fetch(`https://api.callmebot.com/whatsapp.php?phone=27762808596&text=${encoded}&apikey=YOUR_API_KEY`);
-    } catch(e) { console.log('WhatsApp:', e); }
-
-    buildSummary(data);
-    document.getElementById('formContent').classList.add('hidden');
-    setTimeout(() => {
-      document.getElementById('formContent').style.display = 'none';
-      document.getElementById('successScreen').classList.add('show');
-    }, 300);
-  }
-
-  updateBar();
+bar();
 </script>
 </body>
 </html>
