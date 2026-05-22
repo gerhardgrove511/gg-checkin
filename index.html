@@ -148,13 +148,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
         </div>
 
         <div class="qi">
-          <div class="ql"><span class="qn">4.</span> Progress photos — front, side & back</div>
-          <div class="photo-grid">
-            <div class="photo-slot" onclick="photo(this,'front')"><span class="pcheck">✓</span><span class="picon">📸</span><span class="plabel">Front</span></div>
-            <div class="photo-slot" onclick="photo(this,'side')"><span class="pcheck">✓</span><span class="picon">📸</span><span class="plabel">Side</span></div>
-            <div class="photo-slot" onclick="photo(this,'back')"><span class="pcheck">✓</span><span class="picon">📸</span><span class="plabel">Back</span></div>
+          <div class="ql"><span class="qn">4.</span> 📸 Have you sent your weekly progress photos to your coach on WhatsApp?</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Front, side & back photos required — send them to your coach on WhatsApp before submitting.</div>
+          <div class="tg" id="tg-photos">
+            <button class="tbtn" onclick="tog(this,'yes','','tg-photos','e-photos')">✅ Yes, sent!</button>
+            <button class="tbtn" onclick="tog(this,'no','','tg-photos','e-photos')">❌ Not yet</button>
           </div>
-          <div class="emsg" id="e-photos">Please confirm all 3 photos</div>
+          <div class="emsg" id="e-photos">Please confirm you have sent your photos</div>
         </div>
 
         <div class="qi"><div class="ql"><span class="qn">5.</span> Average daily steps</div><input class="inp" type="number" id="steps" placeholder="e.g. 8500" oninput="bar()"><div class="emsg" id="e-steps">Please enter your daily steps</div></div>
@@ -290,7 +290,7 @@ var REQ = [
   function(){return !!g('wLast') && !!g('wThis');},
   function(){return !!g('waistLast') && !!g('waistThis');},
   function(){return !!g('hipsLast') && !!g('hipsThis');},
-  function(){return pics.front && pics.side && pics.back;},
+  function(){return !!document.querySelector('#tg-photos .ay');},
   function(){return !!g('steps');},
   function(){return !!g('workouts');},
   function(){return cardioSel !== '';},
@@ -394,7 +394,7 @@ function validate(){
   chk(!!g('wLast')&&!!g('wThis'),'e-weight',['wLast','wThis']);
   chk(!!g('waistLast')&&!!g('waistThis'),'e-waist',['waistLast','waistThis']);
   chk(!!g('hipsLast')&&!!g('hipsThis'),'e-hips',['hipsLast','hipsThis']);
-  chk(pics.front&&pics.side&&pics.back,'e-photos',[]);
+  chk(!!document.querySelector('#tg-photos .ay'),'e-photos',[]);
   chk(!!g('steps'),'e-steps',['steps']);
   chk(!!g('workouts'),'e-workouts',['workouts']);
   chk(cardioSel!=='','e-cardio',[]);
